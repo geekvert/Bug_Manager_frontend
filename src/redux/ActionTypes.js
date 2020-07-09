@@ -1,0 +1,19 @@
+export const PROJECTS_LOADING = 'PROJECTS_LOADING'
+export const PROJECTS_FAILED = 'PROJECTS_FAILED'
+export const ADD_PROJECTS = 'ADD_PROJECTS'
+
+export const USERS_LOADING = 'USERS_LOADING'
+export const USERS_FAILED = 'USERS_FAILED'
+export const ADD_ALL_USERS = 'ADD_ALL_USERS'
+
+export const BUGS_LOADING = 'BUGS_LOADING'
+export const BUGS_FAILED = 'BUGS_FAILED'
+export const ADD_BUGS = 'ADD_BUGS'
+
+export const ADD_MY_BUGS = 'ADD_MY_BUGS'
+export const MY_BUGS_LOADING = 'MY_BUGS_LOADING'
+export const MY_BUGS_FAILED = 'MY_BUGS_FAILED'
+
+export const THIS_USER_LOADING = 'THIS_USER_LOADING'
+export const THIS_USER_FAILED = 'THIS_USER_FAILED'
+export const ADD_THIS_USER = 'ADD_THIS_USER'

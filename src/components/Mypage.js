@@ -1,8 +1,48 @@
 import React, { Component } from 'react'
-import { Table, Segment, Image, Divider, Header, Button, Search, Menu, Container, Dropdown, Grid, List, Item, Icon, Input, Form, TextArea } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { fetchMyBugs } from '../redux/ActionCreator'
+import { Table, Header, Container } from 'semantic-ui-react'
 
-export default class Mypage extends Component {
+const mapStateToProps = (state) => ({
+    myBugs: state.myBugs,
+    thisUser: state.thisUser
+})
+
+const mapDispatchToProps = (dispatch) => ({
+	fetchMyBugs: (enr_no) => {dispatch(fetchMyBugs(enr_no))}
+})
+
+class Mypage extends Component {
+	componentDidMount() {
+		this.props.fetchMyBugs('1234567890')
+	}
+
     render() {
+		const {myBugs} = this.props
+		const thisUser = 'aditya'
+
+		const assigned_bugs = myBugs.myBugs.filter((bug) => bug.assigned_to === thisUser).map((bug) => (
+			<Table.Row>
+				<Table.Cell>
+					{bug.heading}
+				</Table.Cell>
+				<Table.Cell>
+					{bug.project}
+				</Table.Cell>
+			</Table.Row>
+		))
+
+		const reported_bugs = myBugs.myBugs.filter((bug) => bug.reported_by === thisUser).map((bug) => (
+			<Table.Row>
+				<Table.Cell>
+					{bug.heading}
+				</Table.Cell>
+				<Table.Cell>
+					{bug.project}
+				</Table.Cell>
+			</Table.Row>
+		))
+
         return (
             <>
             <Container style={{ marginTop: '7em' }}>
@@ -20,22 +60,7 @@ export default class Mypage extends Component {
                     </Table.Header>
 
                     <Table.Body>
-                    <Table.Row>
-                        <Table.Cell>
-                            Upload a pic.
-                        </Table.Cell>
-                        <Table.Cell>
-                            LecTut
-                        </Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>
-                            Mobile view broken.
-                        </Table.Cell>
-                        <Table.Cell>
-                            Slambook
-                        </Table.Cell>
-                    </Table.Row>
+                    {assigned_bugs}
                     </Table.Body>
                 </Table>
             </Container>
@@ -55,22 +80,7 @@ export default class Mypage extends Component {
                     </Table.Header>
 
                     <Table.Body>
-                    <Table.Row>
-                        <Table.Cell>
-                            Active status not in sidebar.
-                        </Table.Cell>
-                        <Table.Cell>
-                            Bhawan app
-                        </Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>
-                            Unable to fetch pictures.
-                        </Table.Cell>
-                        <Table.Cell>
-                            Buy & Sell
-                        </Table.Cell>
-                    </Table.Row>
+                    {reported_bugs}
                     </Table.Body>
                 </Table>
             </Container>
@@ -78,3 +88,9 @@ export default class Mypage extends Component {
         )
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Mypage)
+
+/*
+self user ko integrate krna h bas yaha
+*/
