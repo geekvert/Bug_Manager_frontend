@@ -287,7 +287,7 @@ class Bugpage extends Component {
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-                {/* <Comments bug={bug} thisUser={thisUser.thisUser} /> */}
+                <Comments bug={bug} thisUser={thisUser.thisUser} />
                 </Container>
                 </>
             )
@@ -296,7 +296,3 @@ class Bugpage extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bugpage)
-
-/*
-comments
-*/

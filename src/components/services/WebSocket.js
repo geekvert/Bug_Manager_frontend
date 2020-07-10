@@ -59,7 +59,7 @@ class WebSocketService {
 	}
 
 	addComment(object) {
-		this.sendMessage({ command: 'add_comment', access_token: object.acs_token, bug_heading: object.bug_heading, comment:object.comment })
+		this.sendMessage({ command: 'add_comment', access_token: object.access_token, bug_heading: object.bug_heading, comment:object.comment })
 	}
 
 	addCallbacks(commentsCallback, newCommentCallback) {

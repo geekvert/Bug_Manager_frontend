@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Segment, Icon, Header, Form } from 'semantic-ui-react'
-
 import WebSocketInstance from './services/WebSocket'
-
 
 export default class Comments extends Component {
     constructor(props) {
@@ -28,9 +26,10 @@ export default class Comments extends Component {
 
     sendCommentHandler(e, comment) {
         const object = {
-            acs_token: this.props.thisUser.thisUser.acs_token,
+            access_token: window.localStorage.getItem('bug_manager_acs_token'),
             bug_heading: this.props.bug.heading,
-            comment: this.state.comment
+            comment: this.state.comment,
+            test: 'testVar',
         }
         WebSocketInstance.addComment(object)
         this.setState({comment: ''})
@@ -69,9 +68,6 @@ export default class Comments extends Component {
 
     render() {
         const { comments } = this.state
-        const { bug, thisUser } = this.props
-        console.log(this.props)
-
         return (
             <Segment.Group>
                 <Segment>
