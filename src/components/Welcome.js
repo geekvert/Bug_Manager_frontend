@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fetchThisUser } from '../redux/ActionCreator'
-import { Header, Button, Image } from 'semantic-ui-react'
+import { Header, Button, Grid, Image } from 'semantic-ui-react'
 import Loading from './Loading'
-import axios from 'axios'
 
 const mapStateToProps = (state) => ({
 	thisUser: state.thisUser
@@ -14,12 +13,11 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 class Welcome extends Component {
-    // check if access token exists in LS
+    // checking if access token exists in LS
     // if yes then fetch thisUser details and redirect to homepage
     // else render a welcome screen
 
     render() {
-		console.log(this.props)
         const {thisUser} = this.props
         const client_id = 'er1eJX5UyeQgVLdDLICTjuUJKHogSrLRKfKLLIN9'
         const redirect_url = 'http://localhost:3000/afterLogin'
@@ -34,22 +32,38 @@ class Welcome extends Component {
         }
 
         else if (thisUser.error) {
+            alert('Some error occured in Login, please try again.')
 			return (
-                <div style={{marginTop: '5em'}}>
-                    <h1>Something went wrong, please try again :(</h1>
-                    <Button primary size='huge' centered circular as='a' href={link}>
-                        Login using Omniport
-                    </Button>
+                <div style={{paddingTop: '40vh'}}>
+                    <Grid textAlign="center" verticalAlign="middle">
+                        <Grid.Column>
+                            <Header as="h2" textAlign="center">
+                                <Image src={require('../assets/channeli.svg')} alt='logo' size='tiny' />
+                                Bug Manager
+                            </Header>
+                            <Button className='loginBtn' primary size='big' centered circular as='a' href={link}>
+                                Login using Omniport
+                            </Button>
+                        </Grid.Column>
+                    </Grid>
                 </div>
             )
         }
 
         else {
             return (
-                <div style={{marginTop: '5em'}}>
-                    <Button primary size='huge' centered circular as='a' href={link}>
-                        Login using Omniport
-                    </Button>
+                <div style={{paddingTop: '40vh'}}>
+                    <Grid textAlign="center" verticalAlign="middle">
+                        <Grid.Column>
+                            <Header as="h2" textAlign="center">
+                                <Image src={require('../assets/channeli.svg')} alt='logo' size='tiny' />
+                                Bug Manager
+                            </Header>
+                            <Button className='loginBtn' primary size='big' centered circular as='a' href={link}>
+                                Login using Omniport
+                            </Button>
+                        </Grid.Column>
+                    </Grid>
                 </div>
             )
         }
@@ -57,9 +71,3 @@ class Welcome extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome)
-
-/*
-yaha se omni par request maari
-ab omni above waale url par redirect krega
-waha i'll take auth_code & state and then backend par fir request maarunga
-*/

@@ -23,7 +23,7 @@ class Projectpage extends Component {
         this.state = {
             input: false,
 			iconName: 'edit',
-			member: props.thisUser.thisUser ? props.thisUser.thisUser.admin_status : false , // actually it is just admin_status
+			member: props.thisUser.thisUser ? props.thisUser.thisUser.admin_status : false,
 			team: [],
 			bugForm: {
 				heading: '',
@@ -225,7 +225,7 @@ class Projectpage extends Component {
 	
 				<Container style={{ marginTop: '3em' }}>
 					<Header as='h1' style={{borderBottom: '1px solid darkgrey'}}>Bugs in {project.name}</Header>
-					{/* <p>This is a paragraph.</p> */}
+					{/* <p>maybe used for additional info/note</p> */}
 					<Table celled selectable stackable='false'>
 						<Table.Header>
 						<Table.Row>
@@ -278,7 +278,4 @@ export default connect(mapStateToProps, mapDispatchToProps)(Projectpage)
 
 /*
 update wiki
-
-add team member (dropdown disappearing and remove member option not available)
-assigned_to options should have only team members & creator
 */

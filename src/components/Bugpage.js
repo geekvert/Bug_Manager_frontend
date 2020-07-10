@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fetchBugs, fetchProjects } from '../redux/ActionCreator'
-import { Grid, Header, Icon, Table, Container, Segment, TextArea, Form, Item, Button, Label, Dropdown, Input } from 'semantic-ui-react'
+import { Grid, Header, Icon, Container, Segment, TextArea, Form, Button, Label, Dropdown, Image } from 'semantic-ui-react'
 import Loading from './Loading'
 import axios from 'axios'
 import Comments from './comments'
@@ -39,32 +39,31 @@ class Bugpage extends Component {
 
 	fileUpload = (file, bug) => {
 		const url = `http://localhost:8000/backend/bug_images/`;
-		const formData = new FormData()
+        const formData = new FormData()
         formData.append('image', file)
-        formData.append('bug', bug.id)
+        formData.append('bug', bug.heading)
         
 		const config = {
 			headers: {
-                'Content-type': 'multipart/form-data',
+                "Content-type": "multipart/form-data",
             },
 		}
 		return axios
             .post(url, formData, config)
             .then(res => {
-                console.log(res.data)
+                alert('Image added successfully, thanks for contributing!')
+				window.location.reload()
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                alert('Something went wrong in uploading image :(')
+                console.log(err)
+            })
     }
     
-    fileChange = e => {
-		this.setState({ file: e.target.files[0] }, () => {
-			console.log("File chosen --->", this.state.file)
-		})
-	}
+    fileChange = e => this.setState({ file: e.target.files[0] })
 
     handleStatusChange(e, {bug}) {
         // ajax call to change status
-        console.log(bug)
         let status
         switch(bug.status) {
             case 'P':
@@ -92,7 +91,6 @@ class Bugpage extends Component {
     }
 
     changeAssignment(e, {bug}) {
-		console.log(bug.heading, bug.project, this.state.assigned_to)
         // ajax call to server to update assigned_to
         axios
             .patch(`http://localhost:8000/backend/project_bug/${bug.heading}/?project_name=${bug.project}`, {assigned_to: this.state.assigned_to})
@@ -112,14 +110,12 @@ class Bugpage extends Component {
             })
         }
         else {
-			console.log(bug.heading, bug.project, this.state.description)
             // ajax call to server to update desp
             axios
                 .patch(`http://localhost:8000/backend/project_bug/${bug.heading}/?project_name=${bug.project}`, {description: this.state.description})
                 .then(res => {
 					alert('Description updated successfully  :)')
-					console.log(res)
-                    // window.location.reload()
+                    window.location.reload()
                 })
                 .catch(err => alert('Something went wrong in updating bug.'))
             this.setState({
@@ -130,10 +126,12 @@ class Bugpage extends Component {
     }
 
     getImages(bug_heading) {
-        const url = 'http://localhost:8000/backend/bug_images/'
+        const url = 'http://localhost:8000/backend/bug_images'
         axios
-            .get(url, {params:{bug_heading: bug_heading}})
-            .then(res => console.log(res))
+            .get(url, {params: {bug_heading: bug_heading}})
+            .then(res => {
+                this.setState({images: res.data})
+            })
             .catch(err => console.log(err))
     }
 
@@ -142,10 +140,13 @@ class Bugpage extends Component {
         if (this.props.projects.projects.length===0 && !this.props.projects.loading) {
             this.props.fetchProjects()
         }
+        if (this.state.images.length===0) {
+            this.getImages(this.props.match.params.heading) 
+        }
     }
 
     render() {
-        const { match, projects, users, bugs, thisUser, file } = this.props
+        const { match, projects, users, bugs, thisUser } = this.props
         
         if (bugs.loading || projects.loading || users.laoding) {
             return <Loading />
@@ -163,9 +164,6 @@ class Bugpage extends Component {
                 return <h1 style={{marginTop: '5em'}}>Bug '{match.params.heading}' not found</h1>
             }
 
-            // IMAGES HERE
-            this.getImages(bug.heading)
-            
             const description = this.state.input ? <TextArea name='description' value={this.state.description} onChange={(e, {name, value}) => this.setState({[name]: value})} placeholder='Describe the bug...' /> : <Segment>{bug.description}</Segment>
             const timestamp = new Date(bug.timestamp)
 
@@ -174,6 +172,13 @@ class Bugpage extends Component {
 				text: user.username,
 				value: user.username,
 			})) : null
+            
+            const BugImages = ({images}) => {
+                const img = images.map((image) => (
+                    <Image src={image.image} href={image.image} target='_blank' />
+                ))
+                return img
+            }
 
             const AssignedTo = () => (
                 thisUser.admin_status || thisProject.creator===thisUser.thisUser.name || thisProject.team.includes(thisUser.thisUser.name) ?
@@ -253,17 +258,22 @@ class Bugpage extends Component {
                         </Grid.Column>
                         <Grid.Column width={6}>
                             <Header icon='images' content='Images' />
+                            <Segment.Group>
+                                <Segment>
+                                    <Image.Group size='tiny'>
+                                    {this.state.images.length && <BugImages images={this.state.images} />}
+                                    </Image.Group>
+                                </Segment>
                             <Segment>
-                                <label>Upload Image</label>
-                                <Button content="Choose File" labelPosition="left" icon="file" onClick={() => this.fileInputRef.current.click()} />
-
+                                <Button size='mini' content="Choose File" labelPosition="left" icon="file" onClick={() => this.fileInputRef.current.click()} />
                                 <Form bug={bug} onSubmit={(e, props) => this.onFormSubmit(e, props)}>
                                 <Form.Field>
 									<input ref={this.fileInputRef} type='file' hidden onChange={(e) => this.fileChange(e)} />
                                 </Form.Field>
-                                <Button type="submit">Upload</Button>
+                                <Button size='mini' primary type="submit">Upload</Button>
                                 </Form>
                             </Segment>
+                            </Segment.Group>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
@@ -289,7 +299,4 @@ export default connect(mapStateToProps, mapDispatchToProps)(Bugpage)
 
 /*
 comments
-image upload option
 */
-
-// user -> group pe subscribe -> whenever message send/received sabpe jaayega

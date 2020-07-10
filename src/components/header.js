@@ -12,14 +12,10 @@ export default class AppHeader extends Component {
                   Bug Manager
                 </Menu.Item>
                 <Menu.Item position='right' as={Link} to='/mypage'>
-                    Rahul
+                    {this.props.thisUser && this.props.thisUser.name}
                 </Menu.Item>
               </Container>
             </Menu>
         )
     }
 }
-
-/*
-self user integrate
-*/

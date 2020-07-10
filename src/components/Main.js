@@ -9,13 +9,11 @@ import Memberspage from './Memberspage'
 import Bugpage from './Bugpage'
 import Welcome from './Welcome'
 import AfterLogin from './afterLogin'
-// redux integration
 import { connect } from 'react-redux'
-import { fetchProjects, fetchUsers, fetchBugs, fetchThisUser } from '../redux/ActionCreator'
+import { fetchProjects, fetchUsers, fetchThisUser } from '../redux/ActionCreator'
 
-import { store } from '../App'
-import Loading from './Loading'
 import TestComponent from './testing'
+import { Loader } from 'semantic-ui-react'
 
 const mapStateToProps = (state) => ({
 	projects: state.projects,
@@ -42,11 +40,30 @@ class Main extends Component {
 	}
 
     render() {
-		const {users, projects, thisUser} = this.props
+        const {users, projects, thisUser} = this.props
+        
+        if (thisUser.loading) {
+            return <Loader active />
+        }
+        else if (!thisUser.thisUser) {
+            if (window.localStorage.getItem('bug_manager_acs_token')) {
+                return <Loader active />
+            }
+            return (
+                <>
+                <AppHeader thisUser={thisUser.thisUser} />
+                <Switch>
+                <Route exact path='/' component={() => <Welcome thisUser={thisUser} />} />
+                <Route exact path='/afterLogin' component={({location}) => <AfterLogin location={location} />} />
+                <Redirect to='/' />
+                </Switch>
+                </>
+            )
+        }
 
         return (
 			<>
-			<AppHeader/>
+			<AppHeader thisUser={thisUser.thisUser} />
             <Switch>
             <Route exact path='/' component={() => <Welcome thisUser={thisUser} />} />
             <Route exact path='/home' component={() => <Homepage projects={projects} users={users} />} />
@@ -64,7 +81,3 @@ class Main extends Component {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
-
-/*
-if I declare same state_variable/dispatch_func here and in component then it'll cause error
-*/
