@@ -5,6 +5,7 @@ import Loading from './Loading'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { fetchThisUser } from '../redux/ActionCreator'
+import { acs_token } from './Main'
 
 const mapStateToProps = (state) => ({
 	thisUser: state.thisUser
@@ -33,9 +34,8 @@ class Homepage extends Component {
     handleSubmit(e, props) {
 		// dispatching action to create a project
 		const {form} = this.state
-		console.log(form)
 		axios
-			.post('http://localhost:8000/backend/projects/', form)
+			.post('http://localhost:8000/backend/projects/', {...form, acs_token: acs_token})
 			.then(res => {
                 alert(`You have successfully created ${res.data.name}!`)
                 window.location.reload()
@@ -48,7 +48,7 @@ class Homepage extends Component {
     deleteProject(e, data) {
 		// sending request to the server to delete the project
 		return axios
-			.delete(`http://localhost:8000/backend/projects/${data.project}`)
+			.delete(`http://localhost:8000/backend/projects/${data.project}`, {acs_token: acs_token})
 			.then(res => {
 				if (res.status === 204) {
 					alert(`You have deleted ${data.project}!`)

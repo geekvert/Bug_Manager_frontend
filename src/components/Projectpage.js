@@ -5,6 +5,7 @@ import { fetchBugs } from '../redux/ActionCreator'
 import { Table, Header, Button, Container, Grid, List, Form, TextArea, Modal, Icon } from 'semantic-ui-react'
 import Loading from './Loading'
 import { Link } from 'react-router-dom'
+import { acs_token } from './Main'
 
 const mapStateToProps = (state) => ({
 	bugs: state.bugs,
@@ -46,9 +47,9 @@ class Projectpage extends Component {
         else {
 			// ajax call to server to update wiki
 			axios
-				.patch(`http://localhost:8000/backend/projects/${project.name}/`, {wiki: this.state.wiki})
-				.then(res => console.log(res))
-				.catch(err => console.log(err))
+				.patch(`http://localhost:8000/backend/projects/${project.name}/`, {wiki: this.state.wiki, acs_token: acs_token})
+				.then(res => window.location.reload())
+				.catch(err => {alert('Some error occured in updating Wiki.')})
             this.setState({
                 input: false,
                 iconName: 'edit',
@@ -61,7 +62,7 @@ class Projectpage extends Component {
 		// put request to update team members in project
 		const team = value.project.team.concat(this.state.team)
 		axios
-			.patch(`http://localhost:8000/backend/projects/${value.project.name}/`, {team: team})
+			.patch(`http://localhost:8000/backend/projects/${value.project.name}/`, {team: team, acs_token: acs_token})
 			.then(res => {
 				alert('Team successfully updated.')
 				window.location.reload()
@@ -72,7 +73,7 @@ class Projectpage extends Component {
 	// function for adding bug
 	handleBugSubmit(e, value) {
 		axios
-			.post('http://localhost:8000/backend/project_bug/', this.state.bugForm)
+			.post('http://localhost:8000/backend/project_bug/', {...this.state.bugForm, acs_token: acs_token})
 			.then(res => {
 				alert('Bug reported, thanks for contributing.')
 				window.location.reload()
@@ -84,7 +85,7 @@ class Projectpage extends Component {
 
 	getTags() {
 		axios
-		.get('http://localhost:8000/backend/tags/')
+		.get('http://localhost:8000/backend/tags/', {acs_token: acs_token})
 		.then(res => {
 			this.setState({
 				tagOptions: res.data.map((tag) => ({
@@ -126,7 +127,7 @@ class Projectpage extends Component {
 				return <h1 style={{marginTop: '5em'}}>Project '{match.params.projectName}' does not exists!</h1>
 			}
 
-			const wiki = this.state.input ? <TextArea placeholder='Type your project description here...'>{project.wiki}</TextArea> : <p>{project.wiki}</p>
+			const wiki = this.state.input ? <TextArea placeholder='Type your project description here...' onChange={(e, {value}) => this.setState({wiki: value})}>{project.wiki}</TextArea> : <p>{project.wiki}</p>
 			const timestamp = new Date(project.timestamp)
 			const team = project.team.map((member) => <List.Item>{member}</List.Item>)
 
@@ -275,7 +276,3 @@ class Projectpage extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Projectpage)
-
-/*
-update wiki
-*/

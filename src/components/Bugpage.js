@@ -5,6 +5,7 @@ import { Grid, Header, Icon, Container, Segment, TextArea, Form, Button, Label, 
 import Loading from './Loading'
 import axios from 'axios'
 import Comments from './comments'
+import {acs_token} from './Main'
 
 const mapStateToProps = (state) => ({
     bugs: state.bugs,
@@ -42,6 +43,7 @@ class Bugpage extends Component {
         const formData = new FormData()
         formData.append('image', file)
         formData.append('bug', bug.heading)
+        formData.append('acs_token', acs_token)
         
 		const config = {
 			headers: {
@@ -75,9 +77,8 @@ class Bugpage extends Component {
             default:
                 status = 'P'
         }
-
         axios
-            .patch(`http://localhost:8000/backend/project_bug/${bug.heading}/?project_name=${bug.project}`, {status: status})
+            .patch(`http://localhost:8000/backend/project_bug/${bug.heading}/?project_name=${bug.project}`, {status: status, acs_token: acs_token})
             .then(res => {
                 alert('Status successfully changed.')
                 window.location.reload()
@@ -85,15 +86,11 @@ class Bugpage extends Component {
             .catch(err => console.log(err))
     }
 
-    handleCommentSubmit(e, val) {
-        console.log(val);
-        
-    }
-
+    
     changeAssignment(e, {bug}) {
         // ajax call to server to update assigned_to
         axios
-            .patch(`http://localhost:8000/backend/project_bug/${bug.heading}/?project_name=${bug.project}`, {assigned_to: this.state.assigned_to})
+            .patch(`http://localhost:8000/backend/project_bug/${bug.heading}/?project_name=${bug.project}`, {assigned_to: this.state.assigned_to, acs_token: acs_token})
             .then(res => {
 				alert(`Now assigned to ${this.state.assigned_to}!`)
 				window.location.reload()
@@ -112,7 +109,7 @@ class Bugpage extends Component {
         else {
             // ajax call to server to update desp
             axios
-                .patch(`http://localhost:8000/backend/project_bug/${bug.heading}/?project_name=${bug.project}`, {description: this.state.description})
+                .patch(`http://localhost:8000/backend/project_bug/${bug.heading}/?project_name=${bug.project}`, {description: this.state.description, acs_token: acs_token})
                 .then(res => {
 					alert('Description updated successfully  :)')
                     window.location.reload()
@@ -128,7 +125,7 @@ class Bugpage extends Component {
     getImages(bug_heading) {
         const url = 'http://localhost:8000/backend/bug_images'
         axios
-            .get(url, {params: {bug_heading: bug_heading}})
+            .get(url, {params: {bug_heading: bug_heading, acs_token: acs_token}})
             .then(res => {
                 this.setState({images: res.data})
             })

@@ -33,6 +33,7 @@ class Welcome extends Component {
 
         else if (thisUser.error) {
             alert('Some error occured in Login, please try again.')
+            
 			return (
                 <div style={{paddingTop: '40vh'}}>
                     <Grid textAlign="center" verticalAlign="middle">

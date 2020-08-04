@@ -7,6 +7,10 @@ import './style.css';
 
 import Main from './components/Main';
 
+import axios from 'axios';
+
+axios.defaults.headers.common['Authorization'] = 'Bearer '+window.localStorage.getItem('bug_manager_acs_token');
+
 export const store = ConfigureStore();
 
 class App extends Component {

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Table, Header, Button, Container } from 'semantic-ui-react'
 import Loading from './Loading'
 import axios from 'axios'
+import { acs_token } from './Main'
 
 export default class Memberspage extends Component {
     handleDisable(e, data) {
@@ -13,6 +14,7 @@ export default class Memberspage extends Component {
 			data: {
 				username: data.username,
 				disabled_status: true,
+				acs_token: acs_token,
 			}
 		})
 		.then(res => console.log('success',res))
@@ -28,6 +30,7 @@ export default class Memberspage extends Component {
 			data: {
 				username: data.username,
 				disabled_status: false,
+				acs_token: acs_token,
 			}
 		})
 		.then(res => console.log('success',res))
@@ -74,7 +77,3 @@ export default class Memberspage extends Component {
 		}
     }
 }
-
-/*
-DISABLE ENABLE not working
-*/

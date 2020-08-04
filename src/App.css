@@ -2,7 +2,8 @@
   cursor: pointer;
 }
 
-.App {
+.logoutBtn:hover {
+  cursor: pointer;
 }
 
 .App-logo {

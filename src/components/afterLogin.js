@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { fetchThisUser } from '../redux/ActionCreator'
+import { acs_token } from './Main'
 
 const mapStateToProps = (state) => ({
 	thisUser: state.thisUser
@@ -37,7 +38,7 @@ class AfterLogin extends Component {
         if (!this.state.loading) {
             this.setState({loading: true})
             axios
-                .get(link, {params: {code: code}})
+                .get(link, {params: {code: code}, acs_token: acs_token})
                 .then(res => {
                     console.log('RESRESR'+res)
 					this.props.fetchThisUser(res.data.access_token)

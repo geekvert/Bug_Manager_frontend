@@ -80,4 +80,6 @@ class Main extends Component {
     }
 }
 
+export const acs_token = window.localStorage.getItem('bug_manager_acs_token')
+
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
